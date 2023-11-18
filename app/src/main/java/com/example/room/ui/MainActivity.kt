@@ -4,10 +4,14 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.room.database.Movie
 import com.example.room.database.MovieRoomDatabase
 import com.example.room.databinding.ActivityMainBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -31,14 +35,33 @@ class MainActivity : AppCompatActivity() {
         allMovies?.observe(this) { movies ->
             movies?.let { listMovieAdapter.setData(it) }
         }
+        // Atur listener delete di adapter
+        listMovieAdapter.setOnDeleteClickListener(object : ListMovieAdapter.OnDeleteClickListener {
+            override fun onDeleteClick(movie: Movie) {
+                // hapus data di latar belakang
+                deleteMovieInBackground(movie)
+            }
+        })
 
-
+        //intent button tambah ke form
         binding.btnTambah.setOnClickListener {
             val intent = Intent(this, Form::class.java)
             startActivity(intent)
         }
     }
 
+    //background penghapusan ke data Dao Nya pake delete yang ada di Movie Dao
+    private fun deleteMovieInBackground(movie: Movie) {
+        val movieDao = MovieRoomDatabase.getDatabase(this)?.movieDao()
+        movieDao?.let {
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    // Akses database di latar belakang
+                    it.delete(movie)
+                }
+            }
+        }
+    }
     private fun setupRecyclerView() {
         //buat dulu intance gitu kosong dulu
         listMovieAdapter = ListMovieAdapter(emptyList())

@@ -44,6 +44,7 @@ class Form : AppCompatActivity() {
                     description = description,
                     date = date
                 )
+                //namahin pake insert di Dao
                 insert(note)
             } else {
                 //munculin toast

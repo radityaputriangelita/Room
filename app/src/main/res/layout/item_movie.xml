@@ -45,11 +45,15 @@
                 android:layout_marginEnd="30px"
                 android:text="Tanggal tayang"
                 android:layout_marginBottom="30px"/>
-<!--            <ImageButton-->
-<!--                android:layout_width="80px"-->
-<!--                android:layout_height="80px"-->
-<!--                android:src="@drawable/baseline_edit_24"-->
-<!--                />-->
+            <ImageButton
+                android:id="@+id/btn_hapus"
+                android:layout_width="100px"
+                android:layout_height="100px"
+                android:layout_alignEnd="@id/txt_tgl_movie"
+                android:layout_alignTop="@id/txt_title_movie"
+                android:src="@drawable/baseline_delete_24"
+                android:backgroundTint="#FF0000"
+                />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
